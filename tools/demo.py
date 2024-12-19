@@ -1,4 +1,6 @@
 # Copyright (C) Alibaba Group Holding Limited. All rights reserved.
+import sys
+sys.path.append('./')
 
 import argparse
 import os
@@ -259,7 +261,7 @@ def make_parser():
 
     parser.add_argument('input_type',
                         default='image',
-                        help="input type, support [image, video, camera]")
+                        help="input type, support [image, video, camera, rtsp]")
     parser.add_argument('-f',
                         '--config_file',
                         default=None,
@@ -274,6 +276,9 @@ def make_parser():
                         type=int,
                         default=0,
                         help='camera id, necessary when input_type is camera')
+    parser.add_argument('--url',
+                        type=str,
+                        help='url of rtsp, necessary when input_type is rtsp')
     parser.add_argument('--engine',
                         default=None,
                         type=str,
@@ -323,10 +328,21 @@ def main():
             cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
             cv2.imshow("DAMO-YOLO", vis_res)
 
-    elif input_type == 'video' or input_type == 'camera':
-        cap = cv2.VideoCapture(args.path if input_type == 'video' else args.camid)
+    elif input_type == 'video' or input_type == 'camera' or input_type == 'rtsp':
+        if input_type == 'video':
+            cap = cv2.VideoCapture(args.path)
+        elif input_type == 'camera':
+            cap = cv2.VideoCapture(args.camid)
+        elif input_type == 'rtsp':
+            cap = cv2.VideoCapture(args.url)
+
         width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
         height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
+
+        if input_type == 'rtsp':
+            width = 1280
+            height = 720
+
         fps = cap.get(cv2.CAP_PROP_FPS)
         if args.save_result:
             save_path = os.path.join(args.output_dir, os.path.basename(args.path))
@@ -337,17 +353,22 @@ def main():
         while True:
             ret_val, frame = cap.read()
             if ret_val:
+                # image preprocessing
+                frame = cv2.resize(frame, (width, height))
+
                 bboxes, scores, cls_inds = infer_engine.forward(frame)
                 result_frame = infer_engine.visualize(frame, bboxes, scores, cls_inds, conf=args.conf, save_result=False)
                 if args.save_result:
                     vid_writer.write(result_frame)
-                else:
-                    cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
-                    cv2.imshow("DAMO-YOLO", result_frame)
+                
+                cv2.namedWindow("DAMO-YOLO", cv2.WINDOW_NORMAL)
+                cv2.imshow("DAMO-YOLO", result_frame)
                 ch = cv2.waitKey(1)
                 if ch == 27 or ch == ord("q") or ch == ord("Q"):
+                    vid_writer.release()
                     break
             else:
+                vid_writer.release()
                 break
 
 

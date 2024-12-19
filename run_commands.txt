@@ -1,0 +1,31 @@
+# M model
+python tools/demo.py video -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/CCTV_2.mp4
+
+# L model
+python tools/demo.py video -f ./configs/damoyolo_tinynasL45_L.py --engine ./damoyolo_tinynasL45_L_519.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/CCTV_2.mp4
+
+
+
+
+# RTSP
+# Tahu Sumedang
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:CZADKZ@182.0.22.141:554/ch2/main --path tsu.mp4
+
+# MCD
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:IMGTDW@182.0.21.152:554/ch1/main --path mcd.mp4
+
+# Solaria
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:WCMWNA@182.0.20.72:554/ch1/main --path sol.mp4
+
+# SPKLU
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:WCMWNA@182.0.20.72:554/ch2/main --path spklu.mp4
+
+# Ciganea
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:FNZLLZ@182.0.23.170:554/ch1/main --path cig.mp4
+
+# Starbuck
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:WGNVQB@182.0.21.189:554/ch2/main --path stb.mp4
+
+# Toilet
+python tools/demo.py rtsp -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --url rtsp://admin:XNJELA@182.0.23.101:554/ch2/main --path toilet.mp4
+
