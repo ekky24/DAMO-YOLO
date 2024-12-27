@@ -4,6 +4,7 @@ sys.path.append('./')
 
 import argparse
 import os
+import time
 
 import cv2
 import numpy as np
@@ -336,8 +337,8 @@ def main():
         elif input_type == 'rtsp':
             cap = cv2.VideoCapture(args.url)
 
-        width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
-        height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         if input_type == 'rtsp':
             width = 1280
@@ -350,6 +351,10 @@ def main():
             vid_writer = cv2.VideoWriter(
                 save_path, cv2.VideoWriter_fourcc(*"mp4v"),
                 fps, (int(width), int(height)))
+
+        fps = 0
+        prev_time = time.time()
+        
         while True:
             ret_val, frame = cap.read()
             if ret_val:
@@ -358,6 +363,26 @@ def main():
 
                 bboxes, scores, cls_inds = infer_engine.forward(frame)
                 result_frame = infer_engine.visualize(frame, bboxes, scores, cls_inds, conf=args.conf, save_result=False)
+                
+                # Calculate FPS
+                current_time = time.time()
+                elapsed_time = current_time - prev_time
+                prev_time = current_time
+                if elapsed_time > 0:
+                    fps = 1 / elapsed_time
+
+                # Add a white box and FPS text to the frame
+                text = f"FPS: {fps:.2f}"
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 1
+                thickness = 2
+                color = (0, 255, 0)  # Green color for text
+                text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
+                box_coords = (10, 10, 10 + text_size[0] + 10, 10 + text_size[1] + 10)  # (x1, y1, x2, y2)
+                cv2.rectangle(frame, (box_coords[0], box_coords[1]), (box_coords[2], box_coords[3]), (255, 255, 255), -1)
+                text_position = (box_coords[0] + 5, box_coords[3] - 5)
+                cv2.putText(frame, text, text_position, font, font_scale, color, thickness, cv2.LINE_AA)
+                
                 if args.save_result:
                     vid_writer.write(result_frame)
                 

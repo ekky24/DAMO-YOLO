@@ -1,8 +1,8 @@
 # M model
-python tools/demo.py video -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/CCTV_2.mp4
+python tools/demo.py video -f ./configs/damoyolo_tinynasL35_M.py --engine ./damoyolo_tinynasL35_M_502.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/toilet.mp4
 
 # L model
-python tools/demo.py video -f ./configs/damoyolo_tinynasL45_L.py --engine ./damoyolo_tinynasL45_L_519.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/CCTV_2.mp4
+python tools/demo.py video -f ./configs/damoyolo_tinynasL45_L.py --engine ./damoyolo_tinynasL45_L_519.pth --conf 0.5 --infer_size 640 640 --device cuda --path ./assets/toilet.mp4
 
 
 
